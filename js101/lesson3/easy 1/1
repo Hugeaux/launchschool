@@ -1,0 +1,3 @@
+No, it will not. It'll assign two empty values at numbers[4] and numbers[5]
+
+numbers[4] will return undefined.
