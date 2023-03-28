@@ -52,22 +52,19 @@ function calculateWinner(playerScore, computerScore) {
 }
 
 function playAgain() {
-  while (true) {
-    prompt('Do you want to play again (y/n)?');
-    let answer = readline.question().toLowerCase();
+  prompt('Do you want to play again (y/n)?');
+  let answer = readline.question().toLowerCase();
 
-    if (answer[0] === 'y') {
-      playerScore = 0;
-      computerScore = 0;
-      finalWinner = '';
-      startGame();
-      break;
-    } else if (answer[0] !== 'n' && answer[0] !== 'y') {
-      prompt('Please enter "y" or "n".');
-      answer = readline.question().toLowerCase();
-    } else {
-      break;
-    }
+  while (answer.length > 1) {
+    prompt('Please enter "y" or "n".');
+    answer = readline.question().toLowerCase();
+  }
+
+  if (answer[0] === 'y' && answer.length === 1) {
+    playerScore = 0;
+    computerScore = 0;
+    finalWinner = '';
+    startGame();
   }
 }
 
