@@ -1,0 +1,5 @@
+"no"
+
+foo() returns 'yes'
+
+calling bar('yes') returns "no"

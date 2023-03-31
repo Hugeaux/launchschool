@@ -1,0 +1,3 @@
+Yes, .push mutates the original array. 
+concat() outputs a new array, with newElement concatenated to the 
+end of the original buffer.
