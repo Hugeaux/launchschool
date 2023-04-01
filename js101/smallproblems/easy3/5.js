@@ -1,0 +1,7 @@
+function triangle(n) {
+  
+}
+
+/*
+
+*/

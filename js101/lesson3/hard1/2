@@ -1,0 +1,7 @@
+console.log(object); will output { first: [ 1, 2 ] }.
+
+The reason for this is that objects are passed by reference. numArray is therefore referencing the same array as object['first']. 
+
+This array is mutated by numArray.push(2);
+
+Logging object to the console will log the mutated array.
