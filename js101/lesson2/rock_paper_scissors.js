@@ -32,9 +32,9 @@ function displayWinner(choice, computerChoice) {
   }
 }
 
+let finalWinner = '';
 let playerScore = 0;
 let computerScore = 0;
-let finalWinner = '';
 
 function keepScore(choice, computerChoice) {
   if (WINNING_COMBOS[choice].includes(computerChoice)) {
@@ -47,11 +47,13 @@ function keepScore(choice, computerChoice) {
 
 function calculateWinner(playerScore, computerScore) {
   if (playerScore === WINNING_SCORE) {
-    finalWinner = 'player';
     prompt('Congratulations, you have won the game!');
+    finalWinner = 'player';
+    return finalWinner;
   } else if (computerScore === WINNING_SCORE) {
-    finalWinner = 'computer';
     prompt('Too bad, computer has won the game!');
+    finalWinner = 'computer';
+    return finalWinner;
   }
 }
 
@@ -59,15 +61,18 @@ function playAgain() {
   prompt('Do you want to play again (y/n)?');
   let answer = readline.question().toLowerCase();
 
-  while (answer.length > 1) {
+  while (answer !== 'yes' && answer !== 'no' && answer !== 'y' && answer !== 'n') {
     prompt('Please enter "y" or "n".');
     answer = readline.question().toLowerCase();
   }
 
-  if (answer[0] === 'y' && answer.length === 1) {
+  if ((answer[0] === 'y' && answer.length === 1) || answer === 'yes') {
     return true;
-  } else {
+  } else if ((answer[0] === 'n' && answer.length === 1) || answer === 'no')   {
     return false;
+  } else {
+    prompt('Please enter "y" or "n".');
+    answer = readline.question().toLowerCase();
   }
 }
 
@@ -101,8 +106,8 @@ function playerChoice() {
 
 function startGame() {
   console.clear();
-  prompt("Welcome to RPSLS! Best 3 out of 5 moves wins.");
-  while (finalWinner.length === 0) {
+  prompt("Welcome to RPSLS! Best 3 out of 5 rounds wins.");
+  while (finalWinner !== 'player' && finalWinner !== 'computer') {
     let computerPick = computerChoice();
     let playerPick = playerChoice();
 
