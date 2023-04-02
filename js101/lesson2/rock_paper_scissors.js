@@ -1,5 +1,6 @@
 const readline = require('readline-sync');
 const VALID_CHOICES = ['rock', 'paper', 'scissors', 'lizard', 'spock', 'r', 'p', 'sc', 'l', 'sp'];
+const  WINNING_SCORE = 3;
 
 const WINNING_COMBOS = {
   rock: ['scissors', 'lizard', 'sc', 'l'],
@@ -39,13 +40,14 @@ function keepScore(choice, computerChoice) {
   } else if (WINNING_COMBOS[computerChoice].includes(choice)) {
     computerScore += 1;
   }
+  prompt(`Your current score is ${playerScore}. Computer's score is ${computerScore}.`);
 }
 
 function calculateWinner(playerScore, computerScore) {
-  if (playerScore === 3) {
+  if (playerScore === WINNING_SCORE) {
     finalWinner = 'player';
     prompt('Congratulations, you have won the game!');
-  } else if (computerScore === 3) {
+  } else if (computerScore === WINNING_SCORE) {
     finalWinner = 'computer';
     prompt('Too bad, computer has won the game!');
   }
@@ -70,9 +72,10 @@ function playAgain() {
 
 function startGame() {
   console.clear();
+  prompt("Welcome to RPSLS! Best 3 out of 5 moves wins.");
   while (finalWinner.length === 0) {
     prompt(`Choose one: ${VALID_CHOICES.join(', ').slice(0,36)} or${VALID_CHOICES.join(', ').slice(37)}`);
-    let choice = readline.question();
+    let choice = readline.question().toLowerCase();
 
     while (!VALID_CHOICES.includes(choice)) {
       prompt("That's not a valid choice");
@@ -86,6 +89,7 @@ function startGame() {
     keepScore(choice, computerChoice);
     calculateWinner(playerScore, computerScore);
   }
+  prompt("Thanks for playing!");
   playAgain();
 }
 
