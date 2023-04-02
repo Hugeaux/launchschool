@@ -23,8 +23,10 @@ function displayWinner(choice, computerChoice) {
   prompt(`You chose ${choice}, computer chose ${computerChoice}`);
   if (WINNING_COMBOS[choice].includes(computerChoice)) {
     prompt('You win this round!');
+    return choice;
   } else if (WINNING_COMBOS[computerChoice].includes(choice)) {
     prompt('Computer wins this round!');
+    return computerChoice;
   } else {
     prompt("It's a tie!");
   }
@@ -63,34 +65,54 @@ function playAgain() {
   }
 
   if (answer[0] === 'y' && answer.length === 1) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function resetAndPlay(answer) {
+  if (answer === true) {
     playerScore = 0;
     computerScore = 0;
     finalWinner = '';
     startGame();
+  } else {
+    prompt('Thanks for playing, see you next time!');
   }
+}
+
+function computerChoice() {
+  let randomIndex = Math.floor(Math.random() * VALID_CHOICES.length);
+  let computerChoice = VALID_CHOICES[randomIndex];
+  return computerChoice;
+}
+
+function playerChoice() {
+  prompt(`Choose one: ${VALID_CHOICES.join(', ').slice(0,36)} or${VALID_CHOICES.join(', ').slice(37)}`);
+  let choice = readline.question().toLowerCase();
+
+  while (!VALID_CHOICES.includes(choice)) {
+    prompt("That's not a valid choice");
+    choice = readline.question();
+  }
+  return choice;
 }
 
 function startGame() {
   console.clear();
   prompt("Welcome to RPSLS! Best 3 out of 5 moves wins.");
   while (finalWinner.length === 0) {
-    prompt(`Choose one: ${VALID_CHOICES.join(', ').slice(0,36)} or${VALID_CHOICES.join(', ').slice(37)}`);
-    let choice = readline.question().toLowerCase();
+    let computerPick = computerChoice();
+    let playerPick = playerChoice();
 
-    while (!VALID_CHOICES.includes(choice)) {
-      prompt("That's not a valid choice");
-      choice = readline.question();
-    }
-
-    let randomIndex = Math.floor(Math.random() * VALID_CHOICES.length);
-    let computerChoice = VALID_CHOICES[randomIndex];
-
-    displayWinner(choice, computerChoice);
-    keepScore(choice, computerChoice);
+    displayWinner(playerPick, computerPick);
+    keepScore(playerPick, computerPick);
     calculateWinner(playerScore, computerScore);
   }
   prompt("Thanks for playing!");
-  playAgain();
+  let playAgainChoice = playAgain();
+  resetAndPlay(playAgainChoice);
 }
 
 startGame();
