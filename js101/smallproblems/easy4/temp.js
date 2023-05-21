@@ -11,9 +11,12 @@ function stringToInteger(string) {
     8: 8,
     9: 9
   };
-  let arrayOfDigits = string.split("").map(char => DIGITS[char]);
+
+  let stringArray = string.split('');
+  let finalNumber = stringArray.map(element => DIGITS[element]);
   let value = 0;
-  arrayOfDigits.forEach(digit => (value = (10 * value) + digit));
+
+  finalNumber.forEach(element => (value = (10 * value) + element));
   return value;
 }
 
