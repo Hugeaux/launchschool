@@ -1,0 +1,18 @@
+let munsters = {
+  Herman: { age: 32, gender: 'male' },
+  Lily: { age: 30, gender: 'female' },
+  Grandpa: { age: 402, gender: 'male' },
+  Eddie: { age: 10, gender: 'male' },
+  Marilyn: { age: 23, gender: 'female'}
+};
+
+let munsterValues = Object.values(munsters);
+let totalAge = 0;
+
+munsterValues.forEach(element => {
+  if (element['gender'] === 'male') {
+    totalAge += element['age'];
+  }
+});
+
+console.log(totalAge);

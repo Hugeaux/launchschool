@@ -5,8 +5,12 @@ function stringToInteger(string)  {
     numArr.push(+element);
   });
 
-  console.log(numArr);
-  return numArr;
+  let reducedArr = numArr.reduce(function (accum, digit){
+    return (accum * 10) + digit
+  }, 0);
+
+  console.log(reducedArr);
+  return reducedArr;
 }
 
 // Understand the problem
