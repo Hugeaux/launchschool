@@ -194,19 +194,19 @@ function displayScore(scores) {
   console.log(`Player has won ${scores[PLAYER]} games, Computer has won ${scores[COMPUTER]} games`);
 }
 
-function completedRound(scores) {
-  if (scores[PLAYER] === GAMES_TO_WIN || scores[COMPUTER]
-    === GAMES_TO_WIN) {
-    if (playAgain()) {
-      scores[PLAYER] = 0;
-      scores[COMPUTER] = 0;
-    } else {
-      prompt('Thanks for playing Tic Tac Toe!');
-      return false;
-    }
-  }
+function gameOver(scores) {
+  return (scores[PLAYER] === GAMES_TO_WIN || scores[COMPUTER]
+    === GAMES_TO_WIN);
+}
 
-  return true;
+function resetScores(scores) {
+  scores[PLAYER] = 0;
+  scores[COMPUTER] = 0;
+}
+
+function endGame() {
+  prompt('Thanks for playing Tic Tac Toe!');
+  return false;
 }
 
 function determineWinner(board, scores) {
@@ -243,8 +243,12 @@ function startGame() {
     displayBoard(board);
     determineWinner(board, scores);
 
-    if (!completedRound(scores)) {
-      break;
+    if (gameOver(scores)) {
+      if (playAgain()) {
+        resetScores(scores);
+      } else {
+        return endGame();
+      }
     }
   }
 }

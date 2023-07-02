@@ -112,8 +112,6 @@ function startRound() {
 
   keepTotal(playerTotal, dealerTotal);
 
-
-
   playerTurn();
 
   dealerTurn();
