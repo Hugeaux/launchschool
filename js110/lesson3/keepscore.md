@@ -36,7 +36,9 @@ logs the winner, ends the match
 
 Problem
 
-input: game outcomoe
-output: score for player, score for computer
+input: winner of round (string)
+output: 
+- score for player, score for computer
+- winner of game (string)
 
 test cases
