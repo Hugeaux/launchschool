@@ -238,7 +238,6 @@ function startGame() {
     let currentPlayer = FIRST_PLAYER;
 
     trackRounds(board, scores, currentPlayer);
-
     displayBoard(board);
     let winner = detectWinner(board);
     reportWinner(board, winner);
