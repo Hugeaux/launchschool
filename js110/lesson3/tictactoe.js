@@ -209,10 +209,9 @@ function endGame() {
   return false;
 }
 
-function determineWinner(board, scores) {
+function reportWinner(board, winner) {
   if (someoneWon(board)) {
-    updateScores(scores, detectWinner(board));
-    prompt(`${detectWinner(board)} won the game!`);
+    prompt(`${winner} won the game!`);
   } else {
     prompt("It's a tie!");
   }
@@ -241,7 +240,9 @@ function startGame() {
     trackRounds(board, scores, currentPlayer);
 
     displayBoard(board);
-    determineWinner(board, scores);
+    let winner = detectWinner(board);
+    reportWinner(board, winner);
+    updateScores(scores, winner);
 
     if (gameOver(scores)) {
       if (playAgain()) {
