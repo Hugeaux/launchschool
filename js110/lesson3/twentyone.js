@@ -1,13 +1,6 @@
-// 1. Initialize deck
-// 2. Deal cards to player and dealer
-// 3. Player turn: hit or stay
-//    - repeat until bust or stay
-// 4. If player bust, dealer wins.
-// 5. Dealer turn: hit or stay
-//    - repeat until total >= 17
-// 6. If dealer busts, player wins.
-// 7. Compare cards and declare winner.
 const readline = require('readline-sync');
+const DEALER_MAX = 17;
+const MAXIMUM_NUM = 21;
 
 let deck = [
   ['H', '2'], ['H', '3'], ['H', '4'], ['H', '5'], ['H', '6'], ['H', '7'], ['H', '8'], ['H', '9'], ['H', '10'], ['H', 'J'], ['H', 'Q'], ['H', 'K'], ['H', 'A'],
@@ -17,10 +10,7 @@ let deck = [
 ];
 
 function dealCards() {
-  let cardOne = deck[Math.floor(Math.random() * 52)];
-  let cardTwo = deck[Math.floor(Math.random() * 52)];
-
-  return [cardOne, cardTwo];
+  return [deck.pop(), deck.pop()];
 }
 
 function shuffle(array) {
@@ -45,76 +35,166 @@ function calculateTotal(cards) {
   });
 
   values.filter(value => value === 'A').forEach(_ => {
-    if (sum > 21) sum -= 10;
+    if (sum > MAXIMUM_NUM) sum -= 10;
   });
 
-  return sum; 
+  return sum;
 }
 
-function busted() {
-  return score > 21;
+function busted(score) {
+  return score > MAXIMUM_NUM;
 }
 
+function hit(hand) {
+  hand.push(deck.pop());
+  let handTotal = calculateTotal(hand);
+  return handTotal;
+}
 
+function compareCards(playerHand, dealerHand) {
+  let playerCards = joinAnd(displayHand(playerHand));
+  let dealerCards = joinAnd(displayHand(dealerHand));
+  console.log('==============');
+  console.log(`You have ${playerCards} for a total score of ${calculateTotal(playerHand)}. Dealer has ${dealerCards} for a total score of ${calculateTotal(dealerHand)}.`);
+  console.log('==============');
+}
 
-function playerTurn() {
+function joinAnd(arr, separator = ', ') {
+  if (arr.length === 0) {
+    return '';
+  } else if (arr.length === 1) {
+    return `${arr[0]}`;
+  } else if (arr.length === 2) {
+    return `${arr[0]} and ${arr[1]}`;
+  } else {
+    return `${arr.slice(0, -1).join(separator)} and ${arr[arr.length - 1]}`;
+  }
+}
+
+function displayHand(hand) {
+  let values = hand.map(card => card[1]);
+
+  let cards = [];
+  values.forEach(value => {
+    if (value === 'A') {
+      cards.push('Ace');
+    } else if (value === 'J') {
+      cards.push('Jack');
+    } else if (value === 'Q') {
+      cards.push('Queen');
+    } else if (value === 'K') {
+      cards.push('King');
+    } else {
+      cards.push(value);
+    }
+  });
+
+  return cards;
+}
+
+function determineWinner(playerHand, dealerHand) {
+  let playerTotal = calculateTotal(playerHand);
+  let dealerTotal = calculateTotal(dealerHand);
+
+  if (playerTotal > dealerTotal) {
+    console.log(`You won the game!`);
+  } else if (dealerTotal > playerTotal) {
+    console.log(`Dealer won the game.`);
+  } else {
+    console.log('It was a tie, Dealer wins.');
+  }
+}
+
+function playerTurn(hand) {
+  let handTotal;
+
   while (true) {
-    console.log("hit or stay?");
+    console.log("Hit or stay?");
     let answer = readline.question();
 
-
-
-    if (answer === 'stay' || busted()) break;
-  }
-  
-  if (busted()) {
-    // probably end the game? or ask the user to play again?
-    console.log('Too bad, the dealer won!')
-  } else {
-    console.log("You chose to stay!");  // if player didn't bust, must have stayed to get here
-  }
-}
-
-function dealerTurn() {
-  while (true) {
-    if (calculateTotal(dealerTurn) < 17) {
-
+    if (answer.toLowerCase() === 'hit') {
+      handTotal = hit(hand);
+      let cards = joinAnd(displayHand(hand));
+      console.log(`You have ${cards} for a total score of ${handTotal}.`);
     }
 
-    if (busted()) break;
+    if (answer.toLowerCase() === 'stay' || busted(handTotal)) break;
   }
-  
-  if (busted()) {
-    // probably end the game? or ask the user to play again?
+
+  if (busted(handTotal)) {
+    console.log(`Bust, dealer wins!`);
+    return false;
   } else {
     console.log("You chose to stay!");  // if player didn't bust, must have stayed to get here
+    return true;
   }
 }
 
-function keepTotal(playerTotal, dealerTotal) {
-  return {
-    playerTotal: playerTotal,
-    dealerTotal: dealerTotal,
+function dealerTurn(score, hand) {
+  let handTotal = score;
+
+  while (handTotal < DEALER_MAX) {
+    handTotal = hit(hand);
+    console.log('Dealer hit!');
+    if (busted(handTotal)) break;
+  }
+
+  if (busted(handTotal)) {
+    console.log('Dealer busts, you won!');
+    return false;
+  } else {
+    console.log("Dealer chose to stay!");  // if player didn't bust, must have stayed to get here
+    return true;
   }
 }
 
-function startRound() {
+function playAgain() {
+  while (true) {
+    console.log('-------------');
+    console.log('Do you want to play again? (yes or no)');
+    let answer = readline.question().toLowerCase();
+    if (answer === 'yes' || answer === 'y') {
+      return true;
+    } else if (answer === 'no' || answer === 'n') {
+      console.log('Thanks for playing Twenty One!');
+      return false;
+    }
+
+    console.log("Sorry, that's not a valid input (yes or no)");
+  }
+}
+
+while (true) {
+  console.clear();
+  console.log('Welcome to Twenty One!');
+  console.log('==============');
+
   shuffle(deck);
 
   let playerHand = dealCards();
   let dealerHand = dealCards();
 
   console.log(`Dealer has: ${dealerHand[0][1]} and unknown card`);
-  console.log(`You have: ${playerHand[0][1]} and ${playerHand[1][1]}`);
+  console.log(`You have: ${joinAnd(displayHand(playerHand))}`);
 
-  let playerTotal = calculateTotal(playerHand);
+  //  let playerTotal = calculateTotal(playerHand);
   let dealerTotal = calculateTotal(dealerHand);
+  let playerResult = playerTurn(playerHand);
+  let dealerResult;
 
-  keepTotal(playerTotal, dealerTotal);
+  if (playerResult) {
+    dealerResult = dealerTurn(dealerTotal, dealerHand);
+  }
 
-  playerTurn();
+  if (playerResult && dealerResult) {
+    compareCards(playerHand, dealerHand);
+    determineWinner(playerHand, dealerHand);
+  }
 
-  dealerTurn();
+  if (!playAgain()) break;
 }
- 
-startRound();
+
+// ensure that when both dealer and player stay, a winner is calculated
+// don't just show card array, mention which cards player and dealer had
+// make deal function actually deal (aka remove card from deck when chosen)
+// clean up variable naming throughout the program
