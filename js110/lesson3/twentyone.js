@@ -120,8 +120,8 @@ function playerTurn(hand) {
       handTotal = hit(hand);
       let cards = joinAnd(displayHand(hand));
       prompt(`You have ${cards} for a total score of ${handTotal}.`);
-    } 
-    
+    }
+
     if (answer.toLowerCase() === 'stay' || busted(handTotal)) break;
   }
 
